@@ -65,6 +65,16 @@ class AlunoService{
         // Verifica se o aluno existe
         await this.findById(id);
 
+            async delete(id){
+        // Verifica se o aluno existe
+        await this.findById(id);
+
+        //DELETE FROM alunos WHERE id = ?
+        await prisma.aluno.delete({
+            where: { id }
+        });
+    }
+
         try{
             //UPDATE alunos SET ... WHERE id = ?
             const alunoAtualizado = await prisma.aluno.update({

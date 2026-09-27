@@ -13,5 +13,6 @@ router.get("/:id", validarAlunoId, alunoController.findById);
 router.post("/", validarAluno, alunoController.create);
 router.put("/:id", validarAlunoId, alunoController.update);
 router.patch("/:id", validarAlunoId, alunoController.update);
+router.delete("/:id", validarAlunoId, alunoController.delete);
 
 module.exports = router;

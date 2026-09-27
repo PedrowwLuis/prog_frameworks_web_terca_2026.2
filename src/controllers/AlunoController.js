@@ -39,6 +39,17 @@ class AlunoController{
             return response.status(e.statusCode || 500).json({message: e.message});
         }
     }
+
+        async delete(request, response){
+        try{
+            const {id} = request.params;
+            await alunoService.delete(id);
+            // 204: remoção sem corpo de resposta
+            return response.status(204).send();
+        }catch(e){
+            return response.status(e.statusCode || 500).json({message: e.message});
+        }
+    }
 }
 
 module.exports = new AlunoController();
