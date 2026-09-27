@@ -1,16 +1,15 @@
 const prisma = require("../databases/prisma");
 const AlunoInvalidoError = require("../errors/AlunoInvalidoError");
+const AlunoNaoEncontradoError = require("../errors/AlunoNaoEncontradoError");
 
 class AlunoService{
 
     async findMany(page, pageSize, orderBy, order){
-        // Campos pelos quais é permitido ordenar (evita passar um campo
-        // arbitrário/inexistente direto para o Prisma).
+        // Campos de permissão de ordenação
         const camposOrdenaveis = ["id", "nome", "email", "createdAt", "updatedAt"];
         const campo = camposOrdenaveis.includes(orderBy) ? orderBy : "id";
 
-        // Se vier algo diferente de "asc"/"desc", cai no padrão "asc"
-        // em vez de quebrar a aplicação.
+        // Direção padrão: asc
         const direcao = (order === "asc" || order === "desc") ? order : "asc";
 
         //SELECT * FROM alunos ORDER BY campo direcao LIMIT ... OFFSET ...
@@ -25,6 +24,19 @@ class AlunoService{
         ]);
 
         return { alunos, total };
+    }
+
+    async findById(id){
+        //SELECT * FROM alunos WHERE id = ?
+        const aluno = await prisma.aluno.findUnique({
+            where: { id }
+        });
+
+        if(!aluno){
+            throw new AlunoNaoEncontradoError();
+        }
+
+        return aluno;
     }
 
     async create(aluno){
